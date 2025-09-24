@@ -1,0 +1,7 @@
+com\lorenzon\todo_list_api\domain\repository\ItemRepository.class
+com\lorenzon\todo_list_api\common\ModelMapperConfig.class
+com\lorenzon\todo_list_api\api\model\ItemModel.class
+com\lorenzon\todo_list_api\domain\model\Item.class
+com\lorenzon\todo_list_api\api\assembler\ItemAssembler.class
+com\lorenzon\todo_list_api\TodoListApiApplication.class
+com\lorenzon\todo_list_api\api\model\input\ItemInput.class
