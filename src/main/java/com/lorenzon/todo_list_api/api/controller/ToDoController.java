@@ -43,6 +43,6 @@ public class ToDoController {
 
     @GetMapping
     public List<ItemModel> getAllItems() {
-        return itemAssembler.toCollection(toDoService.getAll());
+        return itemAssembler.toCollection(toDoService.findAll());
     }
 }

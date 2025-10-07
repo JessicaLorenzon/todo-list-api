@@ -1,5 +1,6 @@
 package com.lorenzon.todo_list_api.api.controller;
 
+import com.lorenzon.todo_list_api.domain.exception.UserNotFoundException;
 import com.lorenzon.todo_list_api.domain.model.User;
 import com.lorenzon.todo_list_api.domain.repository.UserRepository;
 import com.lorenzon.todo_list_api.dto.LoginRequestDTO;
@@ -25,7 +26,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody LoginRequestDTO body) {
-        User user = this.userRepository.findByEmail(body.email()).orElseThrow(() -> new RuntimeException("User not found"));
+        User user = this.userRepository.findByEmail(body.email()).orElseThrow(() -> new UserNotFoundException());
         if (passwordEncoder.matches(body.password(), user.getPassword())) {
             String token = this.tokenService.generateToken(user);
             return ResponseEntity.ok(new ResponseDTO(token));
