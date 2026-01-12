@@ -3,6 +3,7 @@ package com.lorenzon.todo_list_api.services;
 import com.lorenzon.todo_list_api.dto.TaskDTO;
 import com.lorenzon.todo_list_api.entities.Task;
 import com.lorenzon.todo_list_api.repositories.TaskRepository;
+import com.lorenzon.todo_list_api.services.exceptions.TaskNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,7 +34,7 @@ public class TaskService {
 
     @Transactional
     public TaskDTO update(Long taskId, TaskDTO taskDTO) {
-        Task task = taskRepository.getReferenceById(taskId);
+        Task task = findById(taskId);
         copyDtoToEntity(taskDTO, task);
         task = taskRepository.save(task);
         return new TaskDTO(task);
@@ -41,11 +42,17 @@ public class TaskService {
 
     @Transactional
     public void delete(Long taskId) {
-        taskRepository.deleteById(taskId);
+        Task task = findById(taskId);
+        taskRepository.delete(task);
     }
 
     private void copyDtoToEntity(TaskDTO taskDTO, Task task) {
         task.setTitle(taskDTO.getTitle());
         task.setDescription(taskDTO.getDescription());
+    }
+
+    public Task findById(Long taskId) {
+        return taskRepository.findById(taskId)
+                .orElseThrow(() -> new TaskNotFoundException(taskId));
     }
 }
