@@ -3,11 +3,11 @@ package com.lorenzon.todo_list_api.controllers;
 import com.lorenzon.todo_list_api.dto.TaskDTO;
 import com.lorenzon.todo_list_api.services.TaskService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @AllArgsConstructor
 @RestController
@@ -17,8 +17,9 @@ public class TaskController {
     private TaskService taskService;
 
     @GetMapping
-    public List<TaskDTO> getAllTasks() {
-        return taskService.findAll();
+    public ResponseEntity<Page<TaskDTO>> getAllTasks(Pageable pageable) {
+        Page<TaskDTO> tasksDTO = taskService.findAll(pageable);
+        return ResponseEntity.ok(tasksDTO);
     }
 
     @PostMapping
