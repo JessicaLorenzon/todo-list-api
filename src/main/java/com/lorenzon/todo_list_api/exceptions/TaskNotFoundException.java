@@ -1,8 +1,8 @@
-package com.lorenzon.todo_list_api.services.exceptions;
+package com.lorenzon.todo_list_api.exceptions;
 
 public class TaskNotFoundException extends RuntimeException{
 
-    public TaskNotFoundException(Long taskId) {
+    public TaskNotFoundException(String taskId) {
         super("Task with ID " + taskId + " not found");
     }
 }

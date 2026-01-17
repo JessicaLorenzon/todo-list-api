@@ -1,54 +1,47 @@
 package com.lorenzon.todo_list_api.services;
 
-import com.lorenzon.todo_list_api.dto.TaskDTO;
-import com.lorenzon.todo_list_api.entities.Task;
+import com.lorenzon.todo_list_api.domain.task.Task;
+import com.lorenzon.todo_list_api.domain.task.TaskRequestDTO;
+import com.lorenzon.todo_list_api.exceptions.TaskNotFoundException;
 import com.lorenzon.todo_list_api.repositories.TaskRepository;
-import com.lorenzon.todo_list_api.services.exceptions.TaskNotFoundException;
-import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@AllArgsConstructor
 @Service
 public class TaskService {
 
+    @Autowired
     private TaskRepository taskRepository;
 
-    public Page<TaskDTO> findAll(Pageable pageable) {
+    public Page<Task> findAll(Pageable pageable) {
         Page<Task> tasks = taskRepository.findAll(pageable);
-        return tasks.map(x -> new TaskDTO(x));
+        return tasks;
     }
 
     @Transactional
-    public TaskDTO insert(TaskDTO taskDTO) {
-        Task task = new Task();
-        copyDtoToEntity(taskDTO, task);
-        task = taskRepository.save(task);
-        return new TaskDTO(task);
+    public Task insert(TaskRequestDTO dto) {
+        Task task = new Task(dto);
+        return taskRepository.save(task);
     }
 
     @Transactional
-    public TaskDTO update(Long taskId, TaskDTO taskDTO) {
+    public Task update(String taskId, TaskRequestDTO dto) {
         Task task = findById(taskId);
-        copyDtoToEntity(taskDTO, task);
-        task = taskRepository.save(task);
-        return new TaskDTO(task);
+        task.setTitle(dto.title());
+        task.setDescription(dto.description());
+        return task;
     }
 
     @Transactional
-    public void delete(Long taskId) {
+    public void delete(String taskId) {
         Task task = findById(taskId);
         taskRepository.delete(task);
     }
 
-    private void copyDtoToEntity(TaskDTO taskDTO, Task task) {
-        task.setTitle(taskDTO.getTitle());
-        task.setDescription(taskDTO.getDescription());
-    }
-
-    public Task findById(Long taskId) {
+    public Task findById(String taskId) {
         return taskRepository.findById(taskId)
                 .orElseThrow(() -> new TaskNotFoundException(taskId));
     }

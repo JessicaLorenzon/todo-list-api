@@ -1,6 +1,6 @@
 package com.lorenzon.todo_list_api.controllers.handlers;
 
-import com.lorenzon.todo_list_api.services.exceptions.TaskNotFoundException;
+import com.lorenzon.todo_list_api.exceptions.TaskNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.web.bind.annotation.ControllerAdvice;
