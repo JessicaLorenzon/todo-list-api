@@ -1,5 +1,6 @@
 package com.lorenzon.todo_list_api.domain.task;
 
+import com.lorenzon.todo_list_api.domain.user.User;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -19,8 +20,13 @@ public class Task {
     private String title;
     private String description;
 
-    public Task(TaskRequestDTO data) {
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    public Task(TaskRequestDTO data, User user) {
         this.title = data.title();
         this.description = data.description();
+        this.user = user;
     }
 }
