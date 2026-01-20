@@ -3,8 +3,8 @@ package com.lorenzon.todo_list_api.services;
 import com.lorenzon.todo_list_api.domain.task.Task;
 import com.lorenzon.todo_list_api.domain.task.TaskRequestDTO;
 import com.lorenzon.todo_list_api.domain.user.User;
-import com.lorenzon.todo_list_api.exceptions.ForbiddenException;
 import com.lorenzon.todo_list_api.exceptions.TaskNotFoundException;
+import com.lorenzon.todo_list_api.exceptions.UserForbiddenException;
 import com.lorenzon.todo_list_api.repositories.TaskRepository;
 import com.lorenzon.todo_list_api.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,9 @@ public class TaskService {
     private UserRepository userRepository;
 
     public Page<Task> findAll(Pageable pageable) {
-        return taskRepository.findAll(pageable);
+        User user = (User) userRepository.findByEmail(getLoggedUser());
+
+        return (Page<Task>) taskRepository.findAllByUser(pageable, user);
     }
 
     @Transactional
@@ -65,7 +67,7 @@ public class TaskService {
         User user = (User) userRepository.findByEmail(getLoggedUser());
 
         if (task.getUser() != user) {
-            throw new ForbiddenException();
+            throw new UserForbiddenException();
         }
     }
 

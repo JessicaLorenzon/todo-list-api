@@ -1,9 +1,6 @@
 package com.lorenzon.todo_list_api.controllers;
 
-import com.lorenzon.todo_list_api.domain.user.AuthenticationDTO;
-import com.lorenzon.todo_list_api.domain.user.LoginResponseDTO;
-import com.lorenzon.todo_list_api.domain.user.RegisterDTO;
-import com.lorenzon.todo_list_api.domain.user.User;
+import com.lorenzon.todo_list_api.domain.user.*;
 import com.lorenzon.todo_list_api.infra.security.TokenService;
 import com.lorenzon.todo_list_api.repositories.UserRepository;
 import jakarta.validation.Valid;
@@ -18,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping
 public class AuthenticationController {
 
     @Autowired
@@ -41,7 +38,7 @@ public class AuthenticationController {
         if (this.userRepository.findByEmail(data.email()) != null) return ResponseEntity.badRequest().build();
 
         String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
-        User newUser = new User(data.name(), data.email(), encryptedPassword, data.role());
+        User newUser = new User(data.name(), data.email(), encryptedPassword, UserRole.USER);
 
         this.userRepository.save(newUser);
 
